@@ -1,0 +1,11 @@
+{
+  "login": "Login",
+  "email": "Email",
+  "password": "Password",
+  "somethingWentWrong":"Something went wrong",
+  "required": "Required",
+  "loggingIn": "Logging In",
+  "home": "Home",
+  "setting": "Setting",
+  "logout": "Logout"
+}

@@ -1,0 +1,8 @@
+{
+  "login":"ログイン",
+  "email": "メールアドレス",
+  "password": "パスワード",
+  "somethingWentWrong": "エラーが発生しました",
+  "required": "必須",
+  "loggingIn": "ログイン中"
+}
