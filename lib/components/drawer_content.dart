@@ -1,10 +1,12 @@
+import 'package:demo/cubit/auth_cubit.dart';
 import 'package:demo/models/firebase_auth_provider.dart';
-import 'package:demo/screens/auth_screen.dart';
+import 'package:demo/utils/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
 class DrawerContent extends StatelessWidget {
-  String currentRoute;
+  final String currentRoute;
 
   DrawerContent(this.currentRoute);
 
@@ -13,19 +15,25 @@ class DrawerContent extends StatelessWidget {
     return ListView(
       padding: EdgeInsets.zero,
       children: <Widget>[
-        Consumer<FirebaseAuthProvider>(
-          builder: (_, authProvider, __) => UserAccountsDrawerHeader(
-            accountEmail: Text(authProvider.getEmail() ?? "Not logged in"),
-            accountName: Text(authProvider.getUsername() ?? "Not logged in"),
-            currentAccountPicture: CircleAvatar(
-              backgroundColor: Colors.blueAccent,
-              child: Text(
-                authProvider.getInitials(),
-                style: TextStyle(fontSize: 30),
+        BlocBuilder<AuthCubit, AuthState>(builder: (context, state) {
+          if (state is AuthLoggedIn) {
+            final user = state.user;
+            return UserAccountsDrawerHeader(
+              accountEmail: Text(user.email ?? "Not avaliable"),
+              accountName: Text(user.displayName ?? "Not avaliable"),
+              currentAccountPicture: CircleAvatar(
+                backgroundColor: Colors.blueAccent,
+                child: Text(
+                  getInitials(user.displayName),
+                  style: TextStyle(fontSize: 30),
+                ),
               ),
-            ),
-          ),
-        ),
+            );
+          }
+          return Center(
+            child: Text("Error"),
+          );
+        }),
         ListTile(
           onTap: () {
             Navigator.pushNamed(context, "/");

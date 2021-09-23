@@ -11,7 +11,14 @@ class AuthInitial extends AuthState {}
 
 class AuthLoading extends AuthState {}
 
-class AuthLoggedIn extends AuthState {}
+class AuthLoggedIn extends AuthState {
+  final User user;
+
+  AuthLoggedIn({required this.user});
+
+  @override
+  List<Object> get props => [user];
+}
 
 class AuthLoggedOut extends AuthState {}
 

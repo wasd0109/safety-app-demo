@@ -13,7 +13,7 @@ class AuthCubit extends Cubit<AuthState> {
     try {
       await _firebaseAuth.signInWithEmailAndPassword(
           email: email.trim(), password: password.trim());
-      emit(AuthLoggedIn());
+      emit(AuthLoggedIn(user: _firebaseAuth.currentUser as User));
     } on FirebaseAuthException catch (err) {
       emit(AuthError(error: err));
     }
@@ -25,6 +25,6 @@ class AuthCubit extends Cubit<AuthState> {
     if (_firebaseAuth.currentUser == null) {
       return emit(AuthLoggedOut());
     }
-    return emit(AuthLoggedIn());
+    return emit(AuthLoggedIn(user: _firebaseAuth.currentUser as User));
   }
 }
