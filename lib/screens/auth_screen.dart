@@ -1,7 +1,9 @@
+import 'package:demo/cubit/auth_cubit.dart';
 import 'package:demo/models/firebase_auth_provider.dart';
 import 'package:demo/utils/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -21,28 +23,6 @@ class _AuthScreenState extends State<AuthScreen> {
   TextEditingController _email = TextEditingController();
   TextEditingController _password = TextEditingController();
   Map<String, dynamic> error = {};
-
-  void handleLogin() async {
-    try {
-      UserCredential user =
-          await Provider.of<FirebaseAuthProvider>(context, listen: false)
-              .firebaseAuth
-              .signInWithEmailAndPassword(
-                  email: _email.text.trim(), password: _password.text.trim());
-      _email.clear();
-      _password.clear();
-      Navigator.pushNamed(context, "main");
-    } on FirebaseAuthException catch (e) {
-      Fluttertoast.showToast(
-          msg: e.message ?? AppLocalizations.of(context).somethingWentWrong,
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.TOP,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0);
-      print(e.message);
-    }
-  }
 
   void validateInput(String email, String password) {
     if (email.isEmpty)
@@ -106,21 +86,17 @@ class _AuthScreenState extends State<AuthScreen> {
             ),
             ElevatedButton(
               onPressed: () async {
-                Fluttertoast.showToast(
-                    msg: AppLocalizations.of(context).loggingIn,
-                    toastLength: Toast.LENGTH_SHORT,
-                    gravity: ToastGravity.TOP,
-                    backgroundColor: Colors.white,
-                    textColor: Colors.black,
-                    fontSize: 16.0);
                 setState(
                   () {
                     error = {};
-                    validateInput(_email.text, _password.text);
+                    validateInput(_email.text.trim(), _password.text.trim());
                   },
                 );
 
-                if (error.isEmpty) handleLogin();
+                if (error.isEmpty) {
+                  BlocProvider.of<AuthCubit>(context)
+                      .login(_email.text, _password.text);
+                }
               },
               style: ElevatedButton.styleFrom(minimumSize: Size(100, 40)),
               child: Text(AppLocalizations.of(context).login),

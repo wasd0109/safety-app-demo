@@ -21,4 +21,14 @@ class FirebaseAuthProvider {
 
     return result[0][0] + result[1][0];
   }
+
+  Future<UserCredential> signIn(
+      {required String email, required String password}) async {
+    try {
+      return _firebaseAuth.signInWithEmailAndPassword(
+          email: email.trim(), password: password.trim());
+    } catch (err) {
+      throw err;
+    }
+  }
 }
